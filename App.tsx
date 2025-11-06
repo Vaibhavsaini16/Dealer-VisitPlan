@@ -11,6 +11,7 @@ import { EditRetailerForm } from './components/EditRetailerForm';
 import { CreateVisitForm } from './components/CreateVisitForm';
 import { VisitList } from './components/VisitList';
 import { StaffVisitList } from './components/StaffVisitList';
+import { Login } from './components/Login';
 
 const initialRetailers: Retailer[] = [
     {
@@ -69,6 +70,7 @@ const SuccessNotification: React.FC<{ message: string; onClose: () => void }> = 
 };
 
 const App: React.FC = () => {
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [currentView, setCurrentView] = useState<View>('DASHBOARD');
     const [successMessage, setSuccessMessage] = useState<string | null>(null);
     const [retailers, setRetailers] = useState<Retailer[]>(initialRetailers);
@@ -77,6 +79,17 @@ const App: React.FC = () => {
     const [editingStaff, setEditingStaff] = useState<Staff | null>(null);
     const [editingRetailer, setEditingRetailer] = useState<Retailer | null>(null);
     const [viewingAsStaff, setViewingAsStaff] = useState<Staff | null>(null);
+
+    const handleLogin = () => {
+        setIsAuthenticated(true);
+        setCurrentView('DASHBOARD');
+    };
+
+    const handleLogout = () => {
+        setIsAuthenticated(false);
+        setViewingAsStaff(null);
+        setCurrentView('DASHBOARD');
+    };
 
     const showSuccessMessage = (message: string) => {
         setSuccessMessage(message);
@@ -153,9 +166,19 @@ const App: React.FC = () => {
         }
     };
 
+    if (!isAuthenticated) {
+        return <Login onLogin={handleLogin} />;
+    }
+
     return (
         <div className="min-h-screen bg-slate-50 font-sans text-slate-900">
-            <Header staffList={staffList} setViewingAsStaff={setViewingAsStaff} setCurrentView={setCurrentView} />
+            <Header
+                staffList={staffList}
+                setViewingAsStaff={setViewingAsStaff}
+                setCurrentView={setCurrentView}
+                handleLogout={handleLogout}
+                viewingAsStaff={viewingAsStaff}
+            />
             <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
                 {successMessage && <SuccessNotification message={successMessage} onClose={() => setSuccessMessage(null)} />}
                 {renderContent()}
