@@ -1,0 +1,5 @@
+{
+  "name": "Dealer Management Portal",
+  "description": "An application for dealers to manage and create new retailers and staff members. Retailers can log in via OTP.",
+  "requestFramePermissions": []
+}
